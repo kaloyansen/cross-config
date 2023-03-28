@@ -4,6 +4,7 @@
 set native = x86_64
 set cross = aarch64
 set workd = /home/kalo/work
+set confd = $workd/config
 set tmpd = /tmp
 set icid = `pwd`
 set pause = 3
@@ -17,16 +18,16 @@ sleep $pause
 if ( $# > 0 ) then
     set srcd = $1
 else
-    unset native cross workd tmpd icid
+    unset native cross workd tmpd icid confd
     sleep 3; echo ============== stop ==============; sleep 2
-    exit(1)
+    exit(0)
 endif
 
 set natbd = $tmpd/build-$native
 set natid = $workd/install-$native
 set crobd = $tmpd/build-$cross
 set croid = $workd/install-$cross
-set xfile = $workd/$native.$cross.txt
+set xfile = $confd/$native.$cross.txt
 
 mkdir -vp $natbd $natid $crobd $croid
 
@@ -52,6 +53,6 @@ cd -lv $icid
 echo ============================ cleaning ================================
 sleep $pause
 rm -fR $natbd $crobd
-unset native cross srcd workd tmpd natbd natid crobd croid xfile icid
+unset native cross srcd workd tmpd natbd natid crobd croid xfile icid confd
 echo ============================== done ==================================
 exit(0)
