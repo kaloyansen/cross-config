@@ -1,0 +1,36 @@
+[binaries]
+chemin = '/usr/bin/aarch64-linux-gnu-'
+c = chemin + 'gcc'
+cpp = chemin + 'g++'
+ar = chemin + 'ar'
+strip = chemin + 'strip'
+pkgconfig = '/usr/aarch64-linux-gnu/bin/pkg-config'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[target_machine]
+system = 'linux'
+cpu_family = 'aarch64'
+cpu = 'arm64'
+endian = 'little'
+
+[build-in options]
+buildtype = 'minsize'
+
+# prefix = '/home/kalo/work/install-aarch64'
+# c_std = 'c11'
+# cpp_std = 'c++14'
+# optimization = '2'
+# warning_level = '3'
+# debug = 'false'
+# c_args = ['-march=arm8-a']
+# c_args = ['-O2', '-Wall']
+# c_link_args = ['-march=arm8-a']
+# cpp_args = ['-march=arm8-a']
+# cpp_link_args = ['-march=arm8-a']
+
+

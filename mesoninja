@@ -1,0 +1,57 @@
+#!/usr/bin/env csh
+# # # # # # # # # # # # # # # # # # # # # # # # # #
+
+set native = x86_64
+set cross = aarch64
+set workd = /home/kalo/work
+set tmpd = /tmp
+set icid = `pwd`
+set pause = 3
+
+echo this highly configurable csh executable script to build targets
+echo for different source code compatible processor architectures
+echo like $native and $cross takes the ABSOLUTE path to source directory as argument
+
+sleep $pause
+
+if ( $# > 0 ) then
+    set srcd = $1
+else
+    unset native cross workd tmpd icid
+    sleep 3; echo ============== stop ==============; sleep 2
+    exit(1)
+endif
+
+set natbd = $tmpd/build-$native
+set natid = $workd/install-$native
+set crobd = $tmpd/build-$cross
+set croid = $workd/install-$cross
+set xfile = $workd/$native.$cross.txt
+
+mkdir -vp $natbd $natid $crobd $croid
+
+echo =================== native build $srcd in $natbd ======================
+sleep $pause
+meson setup --prefix $natid $natbd $srcd
+
+echo =================== cross build $srcd in $crobd =======================
+sleep $pause
+meson setup --cross-file $xfile --prefix $croid $crobd $srcd
+
+echo =================== install $native in $natid  ========================
+sleep $pause
+cd -lv $natbd
+ninja install
+
+echo =================== install $cross in $croid ==========================
+sleep $pause
+cd -lv $crobd
+ninja install
+cd -lv $icid
+
+echo ============================ cleaning ================================
+sleep $pause
+rm -fR $natbd $crobd
+unset native cross srcd workd tmpd natbd natid crobd croid xfile icid
+echo ============================== done ==================================
+exit(0)
