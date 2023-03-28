@@ -8,51 +8,97 @@ set confd = $workd/config
 set tmpd = /tmp
 set icid = `pwd`
 set pause = 3
+set dryrun = 0
+set srcd = 0
 
 echo this highly configurable csh executable script to build targets
 echo for different source code compatible processor architectures
-echo like $native and $cross takes the ABSOLUTE path to source directory as argument
+echo like $native and $cross takes the ABSOLUTE path to the source directory
+echo as argument try --source and --dryrun options to run
 
 sleep $pause
 
-if ( $# > 0 ) then
-    set srcd = $1
-else
-    unset native cross workd tmpd icid confd
-    sleep 3; echo ============== stop ==============; sleep 2
+set argv_copy = ($argv)
+while ($#argv_copy > 0)
+    switch ($argv_copy[1])
+        case '-s':
+        case '--source':
+            set srcd = $argv_copy[2]
+            shift argv_copy
+            breaksw
+        case '-r':
+        case '-h':
+        case '--help':
+        case '--dryrun':
+        case '--dry-run':
+            set dryrun = 1
+            breaksw
+        default:
+            echo "Unknown option: $argv_copy[1]"
+            exit(1)
+    endsw
+    shift argv_copy
+end
+
+echo dryrun = $dryrun
+echo source = $srcd
+
+if ( $srcd == 0 ) then
+    unset native cross workd confd tmpd icid pause dryrun srcd
+    echo ========= source unknown =========; sleep 2
+    echo ============== stop ==============; sleep 2
+    echo
     exit(0)
 endif
 
 set natbd = $tmpd/build-$native
-set natid = $workd/install-$native
 set crobd = $tmpd/build-$cross
-set croid = $workd/install-$cross
+set natid = $workd/install/$native
+set croid = $workd/install/$cross
 set xfile = $confd/$native.$cross.txt
 
 mkdir -vp $natbd $natid $crobd $croid
 
 echo =================== native build $srcd in $natbd ======================
 sleep $pause
-meson setup --prefix $natid $natbd $srcd
+set command = "meson setup --prefix $natid $natbd $srcd"
+if $dryrun then
+    echo $command
+else
+    $command
+endif
 
 echo =================== cross build $srcd in $crobd =======================
 sleep $pause
-meson setup --cross-file $xfile --prefix $croid $crobd $srcd
+set command = "meson setup --cross-file $xfile --prefix $croid $crobd $srcd"
+if $dryrun then
+    echo $command
+else
+    $command
+endif
 
 echo =================== install $native in $natid  ========================
 sleep $pause
-cd -lv $natbd
-ninja install
+if $dryrun then
+    echo skipped
+else
+    cd -lv $natbd
+    ninja install
+endif
 
 echo =================== install $cross in $croid ==========================
 sleep $pause
-cd -lv $crobd
-ninja install
-cd -lv $icid
+if $dryrun then
+    echo skipped
+else
+    cd -lv $crobd
+    ninja install
+    cd -lv $icid
+endif
 
 echo ============================ cleaning ================================
 sleep $pause
 rm -fR $natbd $crobd
-unset native cross srcd workd tmpd natbd natid crobd croid xfile icid confd
+unset native cross srcd workd tmpd natbd natid crobd croid xfile icid confd command
 echo ============================== done ==================================
 exit(0)
