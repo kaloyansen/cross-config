@@ -26,7 +26,7 @@ while ($#argv_copy > 0)
             set srcd = $argv_copy[2]
             shift argv_copy
             breaksw
-        case '-r':
+        case '-d':
         case '-h':
         case '--help':
         case '--dryrun':
@@ -55,6 +55,7 @@ set natbd = $tmpd/build-$native
 set crobd = $tmpd/build-$cross
 set natid = $workd/install/$native
 set croid = $workd/install/$cross
+set cropd = $croid/lib/pkgconfig
 set xfile = $confd/$native.$cross.txt
 
 mkdir -vp $natbd $natid $crobd $croid
@@ -70,7 +71,7 @@ endif
 
 echo =================== cross build $srcd in $crobd =======================
 sleep $pause
-set command = "meson setup --cross-file $xfile --prefix $croid $crobd $srcd"
+set command = "meson setup --cross-file $xfile --prefix $croid --pkg-config-path $cropd $crobd $srcd"
 if $dryrun then
     echo $command
 else
@@ -79,26 +80,25 @@ endif
 
 echo =================== install $native in $natid  ========================
 sleep $pause
+set command = "ninja -C $natbd install"
 if $dryrun then
-    echo skipped
+    echo $command
 else
-    cd -lv $natbd
-    ninja install
+    $command
 endif
 
 echo =================== install $cross in $croid ==========================
 sleep $pause
+set command = "ninja -C $crobd install"
 if $dryrun then
-    echo skipped
+    echo $command
 else
-    cd -lv $crobd
-    ninja install
-    cd -lv $icid
+    $command
 endif
 
 echo ============================ cleaning ================================
 sleep $pause
 rm -fR $natbd $crobd
-unset native cross srcd workd tmpd natbd natid crobd croid xfile icid confd command
+unset native cross srcd workd tmpd natbd natid crobd croid cropd xfile icid confd command
 echo ============================== done ==================================
 exit(0)
