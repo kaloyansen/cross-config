@@ -1,18 +1,10 @@
 # CMake toolchain file for cross-building to AArch64 on x86_64 Linux
+# usage: cmake --toolchain /path/to/this/file.cmake /path/to/source -L
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # cmake version
 cmake_minimum_required(VERSION 3.5)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# tool chain definition
-# message("loading aarch64 toolchain")
-# the next line is extremely stupid, but i leave it for fun
-# set(CMAKE_TOOLCHAIN_FILE /home/kalo/work/config/toolchain-aarch64.cmake)
-# this is the toolchain file - define it as an option to cmake instead with
-# --toolchain /home/kalo/work/config/toolchain-aarch64.cmake
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
+# message("cmake tool chain definition")
 
 # system and architecture-specific variables
 set(CMAKE_CROSSCOMPILING TRUE)
@@ -31,13 +23,15 @@ set(PKG_CONFIG_EXECUTABLE /usr/aarch64-linux-gnu/bin/pkg-config)
 
 
 # executables, libraries and headers
+set(CMAKE_SYSROOT /usr/aarch64-linux-gnu)
 set(CMAKE_INSTALL_PREFIX "/home/kalo/work/install/aarch64" CACHE PATH "installation directory")
-set(CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}" CACHE PATH "path to look for dependencies")
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "build type")
+#set(CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}" CACHE PATH "where to look first for files")
 # set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-# set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
+#set(HAVE_POSIX_REGEX 0 CACHE BOOL "Enable POSIX regular expression support")
+#set(HAVE_STEADY_CLOCK 0 CACHE BOOL "")
