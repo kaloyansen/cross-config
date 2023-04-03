@@ -1,5 +1,8 @@
 # CMake toolchain file for cross-building to AArch64 on x86_64 Linux
-# usage: cmake --toolchain /path/to/this/file.cmake /path/to/source -L
+# usage:
+# cmake --toolchain /path/to/this/file.cmake /path/to/source -L
+# make
+# make install
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # cmake version
@@ -28,7 +31,7 @@ set(CMAKE_INSTALL_PREFIX "/home/kalo/work/install/aarch64" CACHE PATH "installat
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "build type")
 #set(CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}" CACHE PATH "where to look first for files")
 # set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+# set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

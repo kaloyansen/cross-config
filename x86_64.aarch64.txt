@@ -5,6 +5,11 @@ cpp = chemin + 'g++'
 ar = chemin + 'ar'
 strip = chemin + 'strip'
 pkgconfig = '/usr/aarch64-linux-gnu/bin/pkg-config'
+llvm-config = '/usr/bin/llvm-config'
+
+
+[properties]
+sys_root = '/usr/aarch64-linux-gnu:/home/kalo/work/install/aarch64'
 
 [host_machine]
 system = 'linux'
